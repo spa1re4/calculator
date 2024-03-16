@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+#include <sstream> // Добавляем заголовочный файл для stringstream
+#include <cmath>
+
+using namespace std;
+
+// Функция для выполнения операций
+double evaluateExpression(const string& expression) {
+    istringstream iss(expression);
+    double result;
+    char op;
+
+    // Считываем первое число
+    iss >> result;
+
+    // Последовательно выполняем операции
+    while (iss >> op) {
+        double operand;
+        iss >> operand;
+        switch (op) {
+            case '+':
+                result += operand;
+                break;
+            case '-':
+                result -= operand;
+                break;
+            case '*':
+                result *= operand;
+                break;
+            case '/':
+                if (operand == 0) {
+                    throw "Error: Division by zero!";
+                }
+                result /= operand;
+                break;
+            case '%':
+                if (operand == 0) {
+                    throw "Error: Division by zero!";
+                }
+                result = fmod(result, operand);
+                break;
+            case '^':
+                result = pow(result, operand);
+                break;
+            default:
+                throw "Error: Invalid operator!";
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    while (true) {
+        cout << "Enter expression (or 'exit' to quit): ";
+        string expression;
+        getline(cin, expression);
+
+        if (expression == "exit") {
+            break;
+        }
+
+        try {
+            double result = evaluateExpression(expression);
+            cout << "Result: " << result << endl;
+        } catch (const char* message) {
+            cout << message << endl; // Выводим сообщение об ошибке
+        }
+    }
+
+    return 0;
+}
